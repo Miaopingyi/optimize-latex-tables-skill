@@ -1,0 +1,15 @@
+{
+  "metric_directions": {
+    "Params (B)": "none",
+    "Context (K)": "none",
+    "MMLU": "higher",
+    "GPQA": "higher",
+    "Latency (ms)": "lower"
+  },
+  "column_groups": [
+    {"label": "Model Setup", "columns": ["Model", "Params (B)", "Context (K)"]},
+    {"label": "Reasoning", "columns": ["MMLU", "GPQA"]},
+    {"label": "Serving", "columns": ["Latency (ms)"]}
+  ],
+  "notes": ["Synthetic example. Bold marks best and underline marks second-best."]
+}

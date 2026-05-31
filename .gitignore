@@ -11,6 +11,7 @@ env/
 table-build/
 grouped-build/
 preview/
+examples/readme-demo/*_build/
 *.aux
 *.log
 *.out

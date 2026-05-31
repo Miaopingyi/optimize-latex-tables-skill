@@ -1,0 +1,14 @@
+{
+  "metric_directions": {
+    "MT": "higher",
+    "IF": "higher",
+    "TQA": "higher",
+    "Cost": "lower"
+  },
+  "column_groups": [
+    {"label": "Training Recipe", "columns": ["Recipe", "Retrieval"]},
+    {"label": "Evaluation", "columns": ["MT", "IF", "TQA"]},
+    {"label": "Budget", "columns": ["Cost"]}
+  ],
+  "notes": ["Synthetic alignment ablation. MT = MT-Bench, IF = IFEval, TQA = TruthfulQA."]
+}

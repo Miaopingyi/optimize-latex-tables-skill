@@ -1,0 +1,6 @@
+Recipe,Retrieval,MT,IF,TQA,Cost
+Base SFT,No,7.1,62.4,48.8,120
+RAG Data,Yes,7.5,66.9,52.7,184
+Reranked RAG,Yes,7.8,69.1,55.3,213
+Preference Mix,Yes,8.2,72.5,58.9,265
+Distilled Mix,Yes,8.0,71.7,60.1,238

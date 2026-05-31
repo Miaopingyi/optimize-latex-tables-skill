@@ -1,0 +1,6 @@
+Model,Params (B),Context (K),MMLU,GPQA,Latency (ms)
+Nova-7B,7,32,63.4,37.8,128
+Orion-13B,13,64,69.1,41.3,164
+Helix-8x7B,14,64,73.2,45.6,187
+Atlas-34B,34,128,74.6,47.9,211
+Astra-70B,70,128,78.3,52.4,279
