@@ -29,6 +29,24 @@ Use a table spec when the table needs decisions that should be explicit and repr
 - `column_groups`: add a grouped header row with `\multicolumn`. Groups must be contiguous and non-overlapping.
 - `notes`: add compact table notes below the tabular environment.
 
+## Visual Theme Guidance
+
+Use visual themes for README figures, project pages, slides, and other presentation surfaces. Keep journal `.tex` output conservative unless the venue allows color.
+
+Recommended soft themes:
+
+- `sage`: warm off-white background, muted green highlights, charcoal text. Best for general README examples.
+- `blue`: pale blue background, blue highlights, slate text. Best for technical reports and model/system comparisons.
+- `lavender`: pale lavender background, purple highlights, dark violet text. Best for summary dashboards and ablation showcases.
+
+Theme principles:
+
+- Use grouped headers and generous spacing before adding color.
+- Use one accent family per table.
+- Reserve the strongest tint for best values and a lighter tint for second-best values.
+- Avoid saturated red/green and heavy borders.
+- Keep rough baseline images available when showing before/after comparisons.
+
 ## Safety Rules
 
 - Do not use a spec to silently relabel, round, sort, or remove data.

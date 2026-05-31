@@ -73,3 +73,13 @@ Only suggest packages that the generated table actually needs.
 - Long method names should be shortened only through user-approved aliases.
 - A table that needs both tiny fonts and resizebox should usually be split.
 - A table with many colored cells is usually less publication-safe than one with bold/underline and clear grouping.
+
+## Presentation-Surface Styling
+
+For README images, project pages, posters, and slides, a more visual table may be appropriate than the final LaTeX manuscript table.
+
+- Prefer soft backgrounds, rounded outer containers, grouped headers, and muted accent colors.
+- Recommended palettes: sage green, pale blue, or lavender.
+- Keep values and labels identical to the source data.
+- Use the same table specification as the LaTeX output so the visual figure remains traceable.
+- Do not use presentation colors as a substitute for validation; still keep `table_data.json`, validation, and audit reports.
