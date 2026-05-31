@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install optional test dependencies
+        run: python -m pip install --upgrade pip openpyxl pillow
+
+      - name: Compile scripts
+        run: python -m py_compile scripts/table_pipeline.py scripts/smoke_test.py
+
+      - name: Run smoke test
+        run: python scripts/smoke_test.py

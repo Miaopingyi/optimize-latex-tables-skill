@@ -1,0 +1,4 @@
+interface:
+  display_name: "Optimize LaTeX Tables"
+  short_description: "Make publication-ready LaTeX tables."
+  default_prompt: "Use $optimize-latex-tables to convert this data and paper template into a publication-ready LaTeX table."
