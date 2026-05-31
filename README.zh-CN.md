@@ -1,6 +1,6 @@
 # Optimize LaTeX Tables Skill
 
-`optimize-latex-tables` 是一个面向 Codex 的 LaTeX 表格优化 skill，用于从 CSV、TSV、Excel、JSON 或已有 LaTeX 表格生成可直接用于论文的高质量表格。它重点解决科研写作中的几个核心问题：适配会议/期刊模板、保证原始数据不被改动、自动生成验证报告，并在可能时编译预览。
+`optimize-latex-tables` 是一个面向 Codex 的 LaTeX 表格优化 skill，用于从 CSV、TSV、Excel、JSON 或已有 LaTeX 表格生成可直接用于论文的高质量表格。它的重点是适配会议/期刊模板、保持原始数据不变、生成可复现的验证报告，并在可用时编译预览。
 
 ## 功能概览
 
@@ -8,27 +8,65 @@
 - 根据目标论文或模板 `.tex` 自动推断版式约束。
 - 通过 `table_data.json` 和数据指纹保护原始数据。
 - 支持保守的 best / second-best 高亮，并允许显式指定指标方向。
-- 支持分组表头、按数据集/任务分组比较、行分组和表注。
+- 支持分组表头、按数据集或任务分组比较、行分组和表注。
 - 生成 validation、audit、manifest、preview 等可复现报告。
 - 在可用时使用 Tectonic 编译预览，并记录 PDF/PNG 产物。
+
+## 示例输出
+
+下面的图片都由 `optimize-latex-tables` 基于合成的大模型研究数据生成。不同风格只改变展示方式，不改变表格数值。
+
+### Classic LaTeX Style
+
+黑白论文风格，包含分组表头、booktabs 式横线、最佳值加粗和次优值下划线。
+
+![Classic LLM benchmark table](assets/llm-benchmark-table-classic.png)
+
+![Classic alignment ablation table](assets/alignment-ablation-table-classic.png)
+
+### Sage Theme
+
+暖色纸面背景和克制的浅绿色高亮，适合 README 和项目主页示例。
+
+![Sage LLM benchmark table](assets/llm-benchmark-table.png)
+
+![Sage alignment ablation table](assets/alignment-ablation-table.png)
+
+### Blue Theme
+
+浅蓝色风格，适合技术报告、模型系统对比和幻灯片摘要。
+
+![Blue LLM benchmark table](assets/llm-benchmark-table-blue.png)
+
+![Blue alignment ablation table](assets/alignment-ablation-table-blue.png)
+
+### Lavender Theme
+
+柔和浅紫色风格，适合消融实验摘要和论文概览图。
+
+![Lavender LLM benchmark table](assets/llm-benchmark-table-lavender.png)
+
+![Lavender alignment ablation table](assets/alignment-ablation-table-lavender.png)
 
 ## 仓库结构
 
 ```text
 .
-├── SKILL.md
-├── agents/openai.yaml
-├── references/
-│   ├── highlight-policy.md
-│   ├── input-contracts.md
-│   ├── quality-gates.md
-│   ├── table-design-rules.md
-│   ├── table-spec.md
-│   ├── template-detection.md
-│   └── workflow-recipes.md
-└── scripts/
-    ├── table_pipeline.py
-    └── smoke_test.py
+|-- SKILL.md
+|-- agents/openai.yaml
+|-- assets/
+|-- examples/readme-demo/
+|-- references/
+|   |-- highlight-policy.md
+|   |-- input-contracts.md
+|   |-- quality-gates.md
+|   |-- table-design-rules.md
+|   |-- table-spec.md
+|   |-- template-detection.md
+|   `-- workflow-recipes.md
+`-- scripts/
+    |-- table_pipeline.py
+    `-- smoke_test.py
 ```
 
 ## 快速开始
@@ -57,7 +95,7 @@ python scripts/table_pipeline.py build \
 
 ## 复杂表格
 
-如果需要分组表头、按数据集内部比较、行分组或表注，可以使用 `table_spec.json`：
+如果需要分组表头、组内比较、行分组或表注，可以使用 `table_spec.json`：
 
 ```json
 {
@@ -89,7 +127,7 @@ python scripts/table_pipeline.py build \
 
 ## 分步命令
 
-如果需要调试，也可以逐步执行：
+调试时可以逐步执行：
 
 ```bash
 python scripts/table_pipeline.py analyze-template --tex paper.tex --out template_profile.json
@@ -102,13 +140,13 @@ python scripts/table_pipeline.py preview --paper paper.tex --table table.tex --o
 
 ## 质量门槛
 
-不要在以下条件满足前把表格视为最终版本：
+只有满足以下条件时，表格才应被视为最终版本：
 
 - `validate` 返回 `ok: true`。
 - `audit` 没有阻塞错误。
-- 所需 LaTeX 包已经在 manifest 或表格注释中列出。
-- 如果提供了目标 `.tex`，已检查 preview PDF/PNG。
-- 指标方向不明确时，不要擅自高亮；要么显式指定，要么保持不高亮。
+- manifest 或表格注释列出了所需 package。
+- 当存在目标 `.tex` 文件时，已经检查过 PDF/PNG 预览。
+- 模糊的指标方向已经被显式确认，或者保持不高亮。
 
 ## 测试
 
@@ -118,7 +156,7 @@ python scripts/table_pipeline.py preview --paper paper.tex --table table.tex --o
 python scripts/smoke_test.py
 ```
 
-该测试覆盖一键 build、CSV、TSV、JSON、可用时的 XLSX、已有 LaTeX 表格、分组表头、分组内高亮、负向数据篡改校验、audit，以及可用时的 preview。
+smoke test 覆盖一键构建、CSV、TSV、JSON、可选 XLSX、已有 LaTeX 输入、分组表头、组内高亮、验证失败行为、audit 行为，以及在渲染工具可用时的 preview。
 
 ## 依赖
 
@@ -127,11 +165,11 @@ python scripts/smoke_test.py
 - 可选：`Pillow`，用于 PNG 预览分析
 - 可选：Tectonic 和 `pdftoppm`，用于 PDF/PNG 预览
 
-CSV、TSV、JSON 和 LaTeX 的核心流程只依赖 Python 标准库。
+核心 CSV/TSV/JSON/LaTeX 流程只依赖 Python 标准库。
 
 ## 安装为 Codex Skill
 
-将本目录复制到 Codex skills 目录：
+将本文件夹复制到你的 Codex skills 目录：
 
 ```text
 %USERPROFILE%\.codex\skills\optimize-latex-tables
@@ -145,4 +183,4 @@ $optimize-latex-tables
 
 ## 许可证
 
-MIT License。见 [LICENSE](LICENSE)。
+MIT License. See [LICENSE](LICENSE).

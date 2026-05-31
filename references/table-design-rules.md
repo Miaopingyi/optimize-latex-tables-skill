@@ -78,8 +78,9 @@ Only suggest packages that the generated table actually needs.
 
 For README images, project pages, posters, and slides, a more visual table may be appropriate than the final LaTeX manuscript table.
 
-- Prefer soft backgrounds, rounded outer containers, grouped headers, and muted accent colors.
-- Recommended palettes: sage green, pale blue, or lavender.
+- Include a `classic` black-and-white option when the figure should look like a conservative LaTeX manuscript table.
+- For visual variants, prefer soft backgrounds, rounded outer containers, grouped headers, and muted accent colors.
+- Recommended color palettes: sage green, pale blue, or lavender.
 - Keep values and labels identical to the source data.
 - Use the same table specification as the LaTeX output so the visual figure remains traceable.
 - Do not use presentation colors as a substitute for validation; still keep `table_data.json`, validation, and audit reports.

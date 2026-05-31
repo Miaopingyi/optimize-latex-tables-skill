@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render polished README table images from the synthetic demo data."""
+"""Render README table style variants from the synthetic demo data."""
 
 from __future__ import annotations
 
@@ -28,8 +28,10 @@ FONT_MED = font("segoeuib.ttf", 24)
 FONT_BOLD = font("segoeuib.ttf", 28)
 FONT_SMALL = font("segoeui.ttf", 19)
 FONT_TINY = font("segoeui.ttf", 17)
-FONT_MONO = font("consola.ttf", 18)
-FONT_MONO_BOLD = font("consolab.ttf", 18)
+FONT_SERIF = font("times.ttf", 24)
+FONT_SERIF_MED = font("timesbd.ttf", 24)
+FONT_SERIF_TITLE = font("times.ttf", 28)
+FONT_SERIF_SMALL = font("times.ttf", 18)
 
 
 THEMES = {
@@ -215,32 +217,89 @@ def render_table(
     image.save(ASSETS / output_name)
 
 
-def render_original(output_name: str) -> None:
-    columns, rows = read_csv(DEMO / "llm_benchmark.csv")
-    width, height = 1200, 330
+def render_classic(
+    csv_name: str,
+    spec_name: str,
+    output_name: str,
+    title: str,
+) -> None:
+    columns, rows = read_csv(DEMO / csv_name)
+    spec = read_spec(DEMO / spec_name)
+    groups = spec["column_groups"]
+    rank_styles = compute_rank_styles(columns, rows, spec)
+    width = 940
+    margin = 40
+    title_h = 42
+    group_h = 34
+    header_h = 68
+    row_h = 31
+    note_h = 42
+    height = margin + title_h + group_h + header_h + len(rows) * row_h + note_h + 22
     image = Image.new("RGB", (width, height), "#ffffff")
     draw = ImageDraw.Draw(image)
-    draw.rectangle((12, 12, width - 12, height - 12), outline="#222222", width=1)
-    lines = [
-        "Prompt: Improve this LLM benchmark table for a paper.",
-        "",
-        "Original Codex output",
-        "",
-        " | ".join(columns),
-    ]
-    for row in rows:
-        lines.append(" | ".join(row[col] for col in columns))
-    y = 26
-    for idx, line in enumerate(lines):
-        fnt = FONT_MONO_BOLD if idx in {0, 2, 4} else FONT_MONO
-        draw.text((24, y), line, font=fnt, fill="#111111")
-        y += 28
+    x0 = margin
+    y = 22
+    table_w = width - 2 * margin
+    col_w = table_w / len(columns)
+
+    text_center(draw, (margin, y, width - margin, y + title_h), title, FONT_SERIF_TITLE, "#111111")
+    y += title_h
+    draw.line((margin, y, width - margin, y), fill="#111111", width=2)
+    y += 4
+
+    lookup = {col: idx for idx, col in enumerate(columns)}
+    for group in groups:
+        indices = [lookup[col] for col in group["columns"]]
+        gx0 = x0 + min(indices) * col_w
+        gx1 = x0 + (max(indices) + 1) * col_w
+        text_center(draw, (int(gx0), y, int(gx1), y + 25), group["label"], FONT_SERIF_TITLE, "#111111")
+        draw.line((int(gx0) + 12, y + 30, int(gx1) - 12, y + 30), fill="#111111", width=1)
+    y += group_h
+
+    for idx, col in enumerate(columns):
+        x = x0 + idx * col_w
+        label = col.replace(" ", "\n") if len(col) > 10 else col
+        text_center(draw, (int(x), y, int(x + col_w), y + header_h), label, FONT_SERIF, "#111111")
+    y += header_h
+    draw.line((margin, y, width - margin, y), fill="#111111", width=1)
+
+    for row_idx, row in enumerate(rows):
+        row_y = y + row_idx * row_h
+        for col_idx, col in enumerate(columns):
+            x = x0 + col_idx * col_w
+            style = rank_styles.get((row_idx, col))
+            value = row[col]
+            fnt = FONT_SERIF_MED if style == "best" else FONT_SERIF
+            if col_idx == 0:
+                text_left(draw, (int(x) + 4, row_y + 3), value, fnt, "#111111")
+            else:
+                text_center(draw, (int(x), row_y, int(x + col_w), row_y + row_h), value, fnt, "#111111")
+            if style == "second":
+                bbox = draw.textbbox((0, 0), value, font=fnt)
+                text_w = bbox[2] - bbox[0]
+                x_mid = int(x + col_w / 2)
+                draw.line((x_mid - text_w // 2, row_y + 25, x_mid + text_w // 2, row_y + 25), fill="#111111", width=1)
+    y += len(rows) * row_h
+    draw.line((margin, y, width - margin, y), fill="#111111", width=2)
+    note = " ".join(spec.get("notes", []))
+    text_center(draw, (margin, y + 4, width - margin, y + note_h), note, FONT_SERIF_SMALL, "#111111")
     ASSETS.mkdir(parents=True, exist_ok=True)
     image.save(ASSETS / output_name)
 
 
 def main() -> None:
-    render_original("original-codex-table.png")
+    render_classic(
+        "llm_benchmark.csv",
+        "llm_benchmark_spec.json",
+        "llm-benchmark-table-classic.png",
+        "Table 1: Synthetic LLM benchmark comparison.",
+    )
+    render_classic(
+        "alignment_ablation.csv",
+        "alignment_ablation_spec.json",
+        "alignment-ablation-table-classic.png",
+        "Table 1: Synthetic alignment and retrieval ablation.",
+    )
     render_table(
         "llm_benchmark.csv",
         "llm_benchmark_spec.json",
@@ -264,6 +323,22 @@ def main() -> None:
         "Synthetic LLM Benchmark Comparison",
         "Blue theme variant for README and presentation surfaces",
         "blue",
+    )
+    render_table(
+        "alignment_ablation.csv",
+        "alignment_ablation_spec.json",
+        "alignment-ablation-table-blue.png",
+        "Synthetic Alignment and Retrieval Ablation",
+        "Blue theme variant for README and presentation surfaces",
+        "blue",
+    )
+    render_table(
+        "llm_benchmark.csv",
+        "llm_benchmark_spec.json",
+        "llm-benchmark-table-lavender.png",
+        "Synthetic LLM Benchmark Comparison",
+        "Lavender theme variant for manuscript-facing summaries",
+        "lavender",
     )
     render_table(
         "alignment_ablation.csv",

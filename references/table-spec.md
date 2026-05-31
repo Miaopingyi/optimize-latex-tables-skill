@@ -35,6 +35,7 @@ Use visual themes for README figures, project pages, slides, and other presentat
 
 Recommended soft themes:
 
+- `classic`: black-and-white LaTeX manuscript style with booktabs-like rules, bold best values, and underlined second-best values. Best for conservative paper-facing previews.
 - `sage`: warm off-white background, muted green highlights, charcoal text. Best for general README examples.
 - `blue`: pale blue background, blue highlights, slate text. Best for technical reports and model/system comparisons.
 - `lavender`: pale lavender background, purple highlights, dark violet text. Best for summary dashboards and ablation showcases.
@@ -45,7 +46,7 @@ Theme principles:
 - Use one accent family per table.
 - Reserve the strongest tint for best values and a lighter tint for second-best values.
 - Avoid saturated red/green and heavy borders.
-- Keep rough baseline images available when showing before/after comparisons.
+- Treat all generated theme images as skill outputs; do not frame `classic` as lower-quality output.
 
 ## Safety Rules
 

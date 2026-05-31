@@ -74,7 +74,7 @@ Useful options:
 - Prefer the `build` command for end-to-end work so validation, audit, and preview reports are produced together.
 - Do not guess metric direction when it can affect a scientific claim.
 - Use an explicit table spec for complex tables with grouped headers, dataset/task-specific comparisons, row groups, or table notes.
-- For README/project-page images, use presentation-surface styling guidance from `references/table-design-rules.md` and the `sage`, `blue`, or `lavender` theme guidance in `references/table-spec.md`.
+- For README/project-page images, use presentation-surface styling guidance from `references/table-design-rules.md` and the `classic`, `sage`, `blue`, or `lavender` theme guidance in `references/table-spec.md`.
 - Prefer structural readability over shrinking a table until it technically fits.
 - Add only packages required by the generated table; report them explicitly.
 - If validation fails, do not present the table as final.
